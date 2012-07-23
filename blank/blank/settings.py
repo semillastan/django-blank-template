@@ -1,4 +1,6 @@
 # Django settings for blank project.
+import os
+ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -16,11 +18,20 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+MEDIA_URL = '/media/'
 
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
 STATIC_URL = '/static/'
+
+UPLOAD_DIR = 'uploads'
+UPLOAD_ROOT = os.path.join(MEDIA_ROOT, UPLOAD_DIR)
+UPLOAD_URL = MEDIA_URL + UPLOAD_DIR + '/'
+
+from django.core.files.storage import FileSystemStorage
+UPLOAD_STORAGE = FileSystemStorage(location=UPLOAD_ROOT, base_url=UPLOAD_URL)
+
+ADMIN_MEDIA_PREFIX = '/static/admin'
 
 STATICFILES_DIRS = ()
 STATICFILES_FINDERS = (
@@ -48,7 +59,9 @@ ROOT_URLCONF = 'blank.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'blank.wsgi.application'
 
-TEMPLATE_DIRS = ()
+TEMPLATE_DIRS = (
+	os.path.join(ROOT_DIR, 'templates'),
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -58,6 +71,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    
+    'south', # Used for database migrations
 )
 
 LOGGING = {
@@ -94,3 +109,9 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+try:
+   from local_settings import *
+except ImportError:
+    raise ImportError('Please provide your own localsettings.py.\n'
+                 'Refer to localsettings.py.template for an example')
