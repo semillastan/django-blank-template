@@ -8,4 +8,4 @@ Download and Installation
 
 Feel free to clone this repository to start your Django project.
 
-You can either create a new project via django-admin.py startproject <project_name>, then copy the settings.py, and other folders which are necessary.
+You can either create a new project via django-admin.py startproject <project-name>, then copy the settings.py, and other folders which are necessary.
